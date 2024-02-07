@@ -63,7 +63,7 @@ export default function Component() {
         return;
       }
 
-      await signIn(undefined, { callbackUrl: "/" });
+      await signIn(undefined, { callbackUrl: "/buy" });
     } catch (error) {
       console.error("Registration error:", error);
       setLoading(false);
