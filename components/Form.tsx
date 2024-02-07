@@ -45,7 +45,7 @@ export default function Component() {
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     setLoading(true);
-    setError(""); // Clear any existing errors
+    setError("");
 
     try {
       const res = await fetch("/api/register", {
@@ -63,18 +63,16 @@ export default function Component() {
         return;
       }
 
-      // On successful registration, redirect or sign in the user
       await signIn(undefined, { callbackUrl: "/" });
     } catch (error) {
       console.error("Registration error:", error);
       setLoading(false);
       setError("An unexpected error occurred");
     } finally {
-      setLoading(false); // Ensure loading is false upon completion
+      setLoading(false);
     }
   };
 
-  // Form setup remains largely the same
   const { handleSubmit, control } = form;
 
   return (
@@ -167,8 +165,13 @@ export default function Component() {
                 )}
               />
 
-              <Button className="w-full bg-blue-900" type="submit">
-                Done
+              <Button
+                style={{ backgroundColor: `${loading ? "#ccc" : null}` }}
+                disabled={loading}
+                className="w-full bg-blue-900"
+                type="submit"
+              >
+                {loading ? "loading..." : "Done"}
               </Button>
             </div>
           </form>

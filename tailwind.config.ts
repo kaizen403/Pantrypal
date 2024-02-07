@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import { nextui } from "@nextui-org/react";
 const defaultTheme = require("tailwindcss/defaultTheme");
 
 const svgToDataUri = require("mini-svg-data-uri");
@@ -15,6 +16,7 @@ const config = {
     "./components/**/*.{ts,tsx}",
     "./app/**/*.{ts,tsx}",
     "./src/**/*.{ts,tsx}",
+    "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
   ],
   prefix: "",
   theme: {
@@ -83,6 +85,7 @@ const config = {
     },
   },
   plugins: [
+    nextui(),
     require("@tailwindcss/aspect-ratio"),
     require("tailwindcss-animate"),
     addVariablesForColors,
