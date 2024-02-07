@@ -27,20 +27,7 @@ const Track = () => {
         style={{ fontFamily: badscript.style.fontFamily }}
         className="text-white my-2 text-md font-semibold items-center"
       >
-        Choose Interests
-      </p>
-      <img
-        src={"rdown.svg"}
-        alt="Right Arrow"
-        style={{
-          width: "25px",
-        }}
-      />
-      <p
-        style={{ fontFamily: badscript.style.fontFamily }}
-        className="text-white my-2 text-md font-semibold items-center"
-      >
-        Get matched
+        Buy / Sell
       </p>
     </div>
   );

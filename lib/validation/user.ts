@@ -7,7 +7,10 @@ const formSchema = z.object({
     .email()
     .regex(/@vitapstudent\.ac\.in$/, "Must be a VITAP student email"),
   password: z.string().min(6), // You can add more criteria based on your security requirements
-  age: z.number().max(100), // Assuming you want to accept ages between 18 and 100
-  gender: z.enum(["Male", "Female", "Other"]), // Assuming you want these three options for gender
+  roomno: z
+    .string()
+    .regex(/^\d+$/, "Expected number")
+    .transform((val) => parseInt(val, 10)),
 });
+
 export default formSchema;

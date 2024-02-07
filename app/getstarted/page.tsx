@@ -9,20 +9,17 @@ const badscript = Bad_Script({
   display: "swap",
   subsets: ["latin"],
 });
-const words = `Oxygen gets you high. In a catastrophic emergency, we're taking giant, panicked breaths. Suddenly you become euphoric, docile. You accept your fate. It's all right here. Emergency water landing, six hundred miles an hour. Blank faces, calm as Hindu cows
+const words = `some basic detail stuff here on login page
 `;
 export default function Page() {
   return (
     <div
-      className="w-full bg-black flex flex-col items-center bg-grid-red-500/[0.2] justify-center rounded-md"
+      className="w-full bg-black flex flex-col items-center bg-grid-blue-500/[0.2] justify-center"
       // Ensures this is the lowest layer by using a negative z-index
     >
       <div className="z-50 pt-20">
-        <h1
-          style={{ fontFamily: badscript.style.fontFamily }}
-          className="md:text-7xl text-5xl tracking-normal lg:text-6xl font-bold text-center text-red-700 relative z-10"
-        >
-          Getting Started
+        <h1 className="md:text-5xl text-5xl tracking-normal lg:text-6xl font-bold text-center text-blue-900 relative z-10">
+          Sign Up
         </h1>
       </div>
       <div
