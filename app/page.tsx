@@ -18,7 +18,7 @@ const lexend = Lexend({
 export default function Home() {
   return (
     <div
-      className="relative w-full bg-black flex flex-col items-center bg-grid-blue-400/[0.15] justify-center overflow-hidden"
+      className="w-full bg-black flex flex-col items-center bg-grid-blue-400/[0.15] justify-center overflow-hidden"
       style={{ height: "100vh", overflowY: "auto" }} // Ensures this is the lowest layer by using a negative z-index
     >
       <div className="flex flex-col z-50 -mt-72">
