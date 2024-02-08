@@ -39,15 +39,15 @@ export default function Nav() {
         </NavbarItem>
       </NavbarContent>
       <NavbarContent justify="end">
-        <NavbarItem className="sm:hidden items-center gap-2">
-          <div className="ml-auto flex items-center gap-4 lg:gap-2">
+        <NavbarItem className="hidden items-center gap-2">
+          {/* <div className="ml-auto flex items-center gap-4 lg:gap-2">
             <Button
               borderRadius="2px"
               className="bg-slate-800 text-white text-lg dark:bg-slate-900  dark:text-white border-neutral-200 dark:border-slate-800"
             >
               <ShoppingCartIcon className="w-4 h-4" /> Cart
             </Button>
-          </div>
+          </div> */}
         </NavbarItem>
       </NavbarContent>
     </Navbar>
