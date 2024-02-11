@@ -6,6 +6,7 @@ import {
   CardContent,
   Card,
 } from "@/components/ui/card";
+import ItemCard from "./ItemCard";
 type SVGProps = React.SVGAttributes<SVGElement>;
 
 export default function Component() {
@@ -43,115 +44,10 @@ export default function Component() {
       </div>
       <div className="flex flex-col lg:min-h-screen">
         <main className="flex-1 overflow-y-auto pb-6">
-          <div className="grid gap-6 px-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
-            <Card>
-              <div className="aspect-square relative overflow-hidden rounded-lg">
-                <img
-                  alt="Image"
-                  className="object-cover"
-                  height="300"
-                  src="/placeholder.svg"
-                  style={{
-                    aspectRatio: "300/300",
-                    objectFit: "cover",
-                  }}
-                  width="300"
-                />
-              </div>
-              <CardContent className="p-2">
-                <CardTitle className="text-base font-semibold">
-                  Cotton T-shirt
-                </CardTitle>
-                <CardDescription className="text-sm">
-                  Comfortable and stylish
-                </CardDescription>
-                <div className="flex items-center justify-between">
-                  <div className="font-semibold">$24.99</div>
-                  <Button size="sm">Add to Cart</Button>
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <div className="aspect-square relative overflow-hidden rounded-lg">
-                <img
-                  alt="Image"
-                  className="object-cover"
-                  height="300"
-                  src="/placeholder.svg"
-                  style={{
-                    aspectRatio: "300/300",
-                    objectFit: "cover",
-                  }}
-                  width="300"
-                />
-              </div>
-              <CardContent className="p-2">
-                <CardTitle className="text-base font-semibold">
-                  Leather Bag
-                </CardTitle>
-                <CardDescription className="text-sm">
-                  Stylish and spacious
-                </CardDescription>
-                <div className="flex items-center justify-between">
-                  <div className="font-semibold">$49.99</div>
-                  <Button size="sm">Add to Cart</Button>
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <div className="aspect-square relative overflow-hidden rounded-lg">
-                <img
-                  alt="Image"
-                  className="object-cover"
-                  height="300"
-                  src="/placeholder.svg"
-                  style={{
-                    aspectRatio: "300/300",
-                    objectFit: "cover",
-                  }}
-                  width="300"
-                />
-              </div>
-              <CardContent className="p-2">
-                <CardTitle className="text-base font-semibold">
-                  Wireless Earbuds
-                </CardTitle>
-                <CardDescription className="text-sm">
-                  High-quality sound
-                </CardDescription>
-                <div className="flex items-center justify-between">
-                  <div className="font-semibold">$79.99</div>
-                  <Button size="sm">Add to Cart</Button>
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <div className="aspect-square relative overflow-hidden rounded-lg">
-                <img
-                  alt="Image"
-                  className="object-cover"
-                  height="300"
-                  src="/placeholder.svg"
-                  style={{
-                    aspectRatio: "300/300",
-                    objectFit: "cover",
-                  }}
-                  width="300"
-                />
-              </div>
-              <CardContent className="p-2">
-                <CardTitle className="text-base font-semibold">
-                  Smartwatch
-                </CardTitle>
-                <CardDescription className="text-sm">
-                  Fitness tracking and notifications
-                </CardDescription>
-                <div className="flex items-center justify-between">
-                  <div className="font-semibold">$129.99</div>
-                  <Button size="sm">Add to Cart</Button>
-                </div>
-              </CardContent>
-            </Card>
+          <div className="grid gap-4 px-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
+            {[...Array(6)].map((_, index) => (
+              <ItemCard key={index} />
+            ))}
           </div>
         </main>
       </div>

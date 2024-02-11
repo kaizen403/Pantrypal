@@ -8,11 +8,6 @@ const client = new PrismaClient();
 const adapter = new PrismaAdapter(client.session, client.user);
 
 export const lucia = new Lucia(adapter, {
-  sessionCookie: {
-    attributes: {
-      secure: env.process === "PRODUCTION", // set `Secure` flag in HTTPS
-    },
-  },
   getUserAttributes: (attributes) => {
     return {
       // we don't need to expose the hashed password!
@@ -28,4 +23,22 @@ declare module "lucia" {
       email: string;
     };
   }
+  interface Session {
+    id: string;
+    userId: string;
+    expiresAt: Date;
+    fresh: boolean;
+  }
 }
+
+// declare module "lucia" {
+//   interface Register {
+//     Lucia: typeof lucia;
+//     DatabaseSessionAttributes: DatabaseSessionAttributes;
+//   }
+//   interface DatabaseSessionAttributes {
+//     id: string;
+//     userid: string;
+//     expiresAt: Date;
+//   }
+// }

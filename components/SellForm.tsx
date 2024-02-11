@@ -11,7 +11,7 @@ import {
   CardContent,
   Card,
 } from "@/components/ui/card";
-import { useSession } from "next-auth/react";
+
 import { signIn } from "next-auth/react";
 import { Input } from "@/components/ui/input";
 
@@ -29,11 +29,12 @@ import {
 
 import ItemformSchema from "@/lib/validation/item";
 import { useState } from "react";
+import { prisma } from "@/lib/prisma";
 
 export default function Component() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const { data: session, status } = useSession();
+
   const form = useForm<z.infer<typeof ItemformSchema>>({
     resolver: zodResolver(ItemformSchema),
   });
@@ -52,13 +53,7 @@ export default function Component() {
     setError("");
 
     try {
-      const res = await fetch("/api/register", {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const item = await prisma.item.create();
 
       if (!res.ok) {
         const errorData: { message: string } = await res.json();
