@@ -1,8 +1,9 @@
 "use client";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
+import { UploadButton } from "@/utils/uploadthing";
 import {
   CardTitle,
   CardDescription,
@@ -10,7 +11,8 @@ import {
   CardContent,
   Card,
 } from "@/components/ui/card";
-
+import { useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import { Input } from "@/components/ui/input";
 
 import { Button } from "@/components/ui/button";
@@ -24,32 +26,33 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { redirect, useRouter } from "next/navigation";
-import formSchema from "@/lib/validation/user";
+
+import ItemformSchema from "@/lib/validation/item";
 import { useState } from "react";
-import { NextResponse } from "next/server";
 
 export default function Component() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const router = useRouter();
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const { data: session, status } = useSession();
+  const form = useForm<z.infer<typeof ItemformSchema>>({
+    resolver: zodResolver(ItemformSchema),
   });
 
   const [formValues, setFormValues] = useState({
-    name: "",
-    email: "",
-    password: "",
-    roomno: "",
+    itemname: "",
+    seller: "",
+    imageurl: "",
+    quantity: "",
+    price: "",
+    sellstart: "",
   });
 
-  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+  const onSubmit = async (data: z.infer<typeof ItemformSchema>) => {
     setLoading(true);
     setError("");
 
     try {
-      const response = await fetch("/api/register", {
+      const res = await fetch("/api/register", {
         method: "POST",
         body: JSON.stringify(data),
         headers: {
@@ -57,20 +60,18 @@ export default function Component() {
         },
       });
 
-      if (!response.ok) {
-        // If the server response was not ok, throw an error with the error message
-        const errorData = await response.json();
-        console.log("failedd");
-        throw new Error(errorData.message || "An unexpected error occurred");
+      if (!res.ok) {
+        const errorData: { message: string } = await res.json();
+        setError(errorData.message);
+        setLoading(false);
+        return;
       }
 
-      console.log("login successfdul");
-
-      router.push("/buy");
-    } catch (error: any) {
-      // TypeScript syntax for typing `error`
+      await signIn(undefined, { callbackUrl: "/buy" });
+    } catch (error) {
       console.error("Registration error:", error);
-      setError(error.message || "An unexpected error occurred");
+      setLoading(false);
+      setError("An unexpected error occurred");
     } finally {
       setLoading(false);
     }
@@ -79,11 +80,11 @@ export default function Component() {
   const { handleSubmit, control } = form;
 
   return (
-    <Card className="mx-auto sm:mx-20 flex flex-col items-center border-blue-800 mb-28 bg-slate-900 lg:max-w-xl">
-      <CardHeader className="space-y-1">
+    <Card className="mx-auto sm:mx-20 flex flex-col items-center border-blue-800  mb-2 bg-slate-900 lg:max-w-xl">
+      <CardHeader className="space-y-1 text-lg text-white font-bold">
+        Add Item
         <CardDescription className="text-center">
-          How is it safe? None of your personal data is being taken except full
-          name and college mail is taken for ensuring exclusivity.
+          {status === "authenticated" && <p>Hi Rishi</p>}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -92,14 +93,14 @@ export default function Component() {
             <div className="space-y-4">
               <FormField
                 control={form.control}
-                name="name"
+                name="itemname"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-white">Full Name</FormLabel>
+                    <FormLabel className="text-white">Item Name</FormLabel>
                     <FormControl>
                       <Input
                         className="bg-slate-800 text-white"
-                        placeholder="Your name"
+                        placeholder="Enter Name"
                         {...field}
                       />
                     </FormControl>
@@ -108,61 +109,72 @@ export default function Component() {
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
-                name="email"
-                render={({ field }) => (
+                name="imageurl" // Assuming 'imageurl' is the name you're using for the image URL in your form
+                render={() => (
                   <FormItem>
-                    <FormLabel className="text-white">Email</FormLabel>
+                    <FormLabel className="text-white">Image</FormLabel>{" "}
+                    {/* Label added here */}
                     <FormControl>
-                      <Input
-                        type="email"
-                        className="bg-slate-800 text-white"
-                        placeholder="abc@vitapstudent.ac.in"
-                        {...field}
+                      <UploadButton
+                        appearance={{
+                          button:
+                            "ut-ready:bg-blue-500 ut-uploading:cursor-not-allowed rounded-r-none bg-red-500 bg-none after:bg-orange-400",
+                          container:
+                            "w-max flex-row rounded-md border-cyan-300 bg-slate-800",
+                          allowedContent:
+                            "flex h-8 flex-col items-center justify-center px-2 text-white",
+                        }}
+                        endpoint="imageUploader"
+                        onClientUploadComplete={(res) => {
+                          console.log(res[0].url);
+                          form.setValue("imageurl", res[0].url);
+                        }}
+                        onUploadError={(error: Error) => {
+                          alert(`ERROR! ${error.message}`);
+                        }}
                       />
                     </FormControl>
-                    <FormDescription>
-                      Must end with @vitapstudent.ac.in
-                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
               />
               <FormField
                 control={form.control}
-                name="password"
+                name="quantity"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-white">password</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="Password"
-                        {...field}
-                        className="bg-slate-800 text-white"
-                      />
-                    </FormControl>
-                    <FormDescription>Min 6 letters</FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="roomno"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-white">Room no</FormLabel>
+                    <FormLabel className="text-white">Quantity</FormLabel>
                     <FormControl>
                       <Input
                         type="number"
+                        className="bg-slate-800 text-white"
                         placeholder="Select"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription></FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="price"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-white">Price</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="Price"
                         {...field}
                         className="bg-slate-800 text-white"
                       />
                     </FormControl>
-
+                    <FormDescription>Min: 0</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -174,7 +186,7 @@ export default function Component() {
                 className="w-full bg-blue-900"
                 type="submit"
               >
-                {loading ? "loading..." : "Done"}
+                {loading ? "loading..." : "Add"}
               </Button>
             </div>
           </form>

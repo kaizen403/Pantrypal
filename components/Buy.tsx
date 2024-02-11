@@ -10,7 +10,7 @@ type SVGProps = React.SVGAttributes<SVGElement>;
 
 export default function Component() {
   return (
-    <div className="grid w-full min-h-screen lg:grid-cols-[300px_1fr_1/3]">
+    <div className="grid w-full min-h-screen lg:grid-cols-[100px_1fr_1/3]">
       <div className=" flex-col border-r">
         <div className="flex-1 overflow-auto py-4">
           <nav className="grid items-center px-4 text-sm font-medium">
@@ -43,7 +43,7 @@ export default function Component() {
       </div>
       <div className="flex flex-col lg:min-h-screen">
         <main className="flex-1 overflow-y-auto pb-6">
-          <div className="grid gap-4 px-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="grid gap-6 px-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
             <Card>
               <div className="aspect-square relative overflow-hidden rounded-lg">
                 <img

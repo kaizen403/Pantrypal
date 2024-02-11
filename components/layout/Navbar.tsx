@@ -14,7 +14,7 @@ import { SearchIcon, ShoppingCartIcon } from "lucide-react";
 
 export default function Nav() {
   return (
-    <Navbar isBordered isBlurred className="bg-slate-950">
+    <Navbar isBordered isBlurred className="bg-slate-950 z-50">
       <Image alt={"logo"} src={"/logo.svg"} width={32} height={32} />
       <NavbarBrand>
         <p className="font-bold tracking-wide text-white">PantryPal</p>
@@ -26,7 +26,11 @@ export default function Nav() {
           </Link>
         </NavbarItem>
         <NavbarItem isActive>
-          <Link className="font-bold text-white" color="foreground" href="#">
+          <Link
+            className="font-bold text-white"
+            color="foreground"
+            href="/sell"
+          >
             Sell
           </Link>
         </NavbarItem>

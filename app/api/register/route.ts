@@ -1,5 +1,7 @@
+import { lucia } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { hash } from "bcryptjs";
+import { generateId } from "lucia";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
@@ -11,9 +13,11 @@ export async function POST(req: Request) {
       roomno: number;
     };
     const hashed_password = await hash(password, 12);
+    const id = generateId(15);
 
     const user = await prisma.user.create({
       data: {
+        id,
         name,
         email: email.toLowerCase(),
         password: hashed_password,
@@ -21,13 +25,10 @@ export async function POST(req: Request) {
       },
     });
     console.log(user);
+    console.log(user.id);
 
-    return NextResponse.json({
-      user: {
-        name: user.name,
-        email: user.email,
-        room: user.room,
-      },
+    return new Response(null, {
+      status: 200,
     });
   } catch (error: any) {
     return new NextResponse(
