@@ -27,7 +27,6 @@ import {
 import { redirect, useRouter } from "next/navigation";
 import formSchema from "@/lib/validation/user";
 import { useState } from "react";
-import { NextResponse } from "next/server";
 
 export default function Component() {
   const [loading, setLoading] = useState(false);

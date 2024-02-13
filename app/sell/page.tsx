@@ -1,8 +1,8 @@
-"use client";
 import React from "react";
 import { Bad_Script } from "next/font/google";
 import { TextGenerateEffect } from "@/components/ani_ui/text-generate-effect";
 import SellForm from "@/components/SellForm";
+import { validateRequest } from "@/lib/auth";
 
 const badscript = Bad_Script({
   weight: "400",
@@ -12,7 +12,8 @@ const badscript = Bad_Script({
 });
 const words = `some basic detail stuff here on login page
 `;
-export default function Page() {
+export default async function Page() {
+  const { user } = await validateRequest();
   return (
     <div
       className="w-full h-screen bg-black flex flex-col items-center bg-grid-blue-500/[0.2] justify-center"
@@ -33,7 +34,7 @@ export default function Page() {
           Create an Account
         </h1> */}
         <div>
-          <SellForm />
+          <SellForm userId={user?.id} />
         </div>
       </div>
     </div>

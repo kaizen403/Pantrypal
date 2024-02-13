@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { string, z } from "zod";
 import { UploadButton } from "@/utils/uploadthing";
 import {
   CardTitle,
@@ -12,7 +12,6 @@ import {
   Card,
 } from "@/components/ui/card";
 
-import { signIn } from "next-auth/react";
 import { Input } from "@/components/ui/input";
 
 import { Button } from "@/components/ui/button";
@@ -30,61 +29,83 @@ import {
 import ItemformSchema from "@/lib/validation/item";
 import { useState } from "react";
 import { prisma } from "@/lib/prisma";
+import getUserNameById from "@/lib/actions/user.actions";
+import { useRouter } from "next/navigation";
 
-export default function Component() {
+type ComponentProps = {
+  userId?: string;
+};
+export default function Component({ userId }: ComponentProps) {
+  const formId = "something";
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
+  const router = useRouter();
   const form = useForm<z.infer<typeof ItemformSchema>>({
     resolver: zodResolver(ItemformSchema),
   });
 
   const [formValues, setFormValues] = useState({
     itemname: "",
-    seller: "",
     imageurl: "",
     quantity: "",
     price: "",
-    sellstart: "",
   });
 
   const onSubmit = async (data: z.infer<typeof ItemformSchema>) => {
+    console.log("button clicked");
+
     setLoading(true);
     setError("");
 
-    try {
-      const item = await prisma.item.create();
+    const sellerNameOrNull = await getUserNameById(userId);
+    if (sellerNameOrNull === null) {
+      setError("Seller name not found.");
+      setLoading(false);
+      return;
+    }
 
-      if (!res.ok) {
-        const errorData: { message: string } = await res.json();
-        setError(errorData.message);
-        setLoading(false);
-        return;
+    const sellerName: string = sellerNameOrNull;
+    try {
+      const response = await fetch("/api/sell", {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        // If the server response was not ok, throw an error with the error message
+        const errorData = await response.json();
+        console.log("failedd");
+        throw new Error(errorData.message || "An unexpected error occurred");
       }
 
-      await signIn(undefined, { callbackUrl: "/buy" });
-    } catch (error) {
+      console.log("login successfdul");
+
+      router.push("/buy");
+    } catch (error: any) {
+      // TypeScript syntax for typing `error`
       console.error("Registration error:", error);
-      setLoading(false);
-      setError("An unexpected error occurred");
+      setError(error.message || "An unexpected error occurred");
     } finally {
       setLoading(false);
     }
   };
-
   const { handleSubmit, control } = form;
-
   return (
     <Card className="mx-auto sm:mx-20 flex flex-col items-center border-blue-800  mb-2 bg-slate-900 lg:max-w-xl">
       <CardHeader className="space-y-1 text-lg text-white font-bold">
         Add Item
-        <CardDescription className="text-center">
-          {status === "authenticated" && <p>Hi Rishi</p>}
-        </CardDescription>
+        <CardDescription className="text-center"> </CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <form
+            id={formId}
+            onSubmit={handleSubmit(onSubmit)}
+            className="space-y-6"
+          >
             <div className="space-y-4">
               <FormField
                 control={form.control}
@@ -104,7 +125,6 @@ export default function Component() {
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
                 name="imageurl" // Assuming 'imageurl' is the name you're using for the image URL in your form
@@ -179,6 +199,7 @@ export default function Component() {
                 style={{ backgroundColor: `${loading ? "#ccc" : null}` }}
                 disabled={loading}
                 className="w-full bg-blue-900"
+                form={formId}
                 type="submit"
               >
                 {loading ? "loading..." : "Add"}

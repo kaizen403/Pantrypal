@@ -1,17 +1,36 @@
+"use client";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import {
-  CardTitle,
-  CardDescription,
-  CardContent,
-  Card,
-} from "@/components/ui/card";
 import ItemCard from "./ItemCard";
+import getAllItems from "@/lib/actions/getitems";
+import { useState, useEffect } from "react";
 type SVGProps = React.SVGAttributes<SVGElement>;
+interface Item {
+  id: number;
+  itemname: string;
+  seller: string;
+  imageurl: string;
+  quantity: number;
+  price: number;
+  sellstart: Date;
+}
 
 export default function Component() {
+  const [items, setItems] = useState<Item[]>([]);
+
+  useEffect(() => {
+    const fetchItems = async () => {
+      try {
+        const fetchedItems = await getAllItems();
+        setItems(fetchedItems);
+      } catch (error) {
+        console.error("Failed to fetch items:", error);
+      }
+    };
+
+    fetchItems();
+  }, []);
   return (
-    <div className="grid w-full min-h-screen lg:grid-cols-[100px_1fr_1/3]">
+    <div className="grid w-full h-auto mb-3 lg:grid-cols-[100px_1fr_1/3]">
       <div className=" flex-col border-r">
         <div className="flex-1 overflow-auto py-4">
           <nav className="grid items-center px-4 text-sm font-medium">
@@ -43,10 +62,17 @@ export default function Component() {
         </div>
       </div>
       <div className="flex flex-col lg:min-h-screen">
-        <main className="flex-1 overflow-y-auto pb-6">
-          <div className="grid gap-4 px-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
-            {[...Array(6)].map((_, index) => (
-              <ItemCard key={index} />
+        <main className="flex-1 overflow-y-auto">
+          <div className="grid gap-4  mx-6 lg:grid-cols-4 xl:grid-cols-6">
+            {items.map((item, index) => (
+              <ItemCard
+                key={item.id}
+                itemname={item.itemname}
+                seller={item.seller}
+                imageurl={item.imageurl}
+                quantity={item.quantity}
+                price={item.price}
+              />
             ))}
           </div>
         </main>
@@ -74,27 +100,6 @@ const HeartIcon: React.FC<SVGProps> = (props) => {
   );
 };
 
-const Package2Icon: React.FC<SVGProps> = (props) => {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9Z" />
-      <path d="m3 9 2.45-4.9A2 2 0 0 1 7.24 3h9.52a2 2 0 0 1 1.8 1.1L21 9" />
-      <path d="M12 3v6" />
-    </svg>
-  );
-};
-
 const PackageIcon: React.FC<SVGProps> = (props) => {
   return (
     <svg
@@ -113,26 +118,6 @@ const PackageIcon: React.FC<SVGProps> = (props) => {
       <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
       <path d="m3.3 7 8.7 5 8.7-5" />
       <path d="M12 22V12" />
-    </svg>
-  );
-};
-
-const SearchIcon: React.FC<SVGProps> = (props) => {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle cx="11" cy="11" r="8" />
-      <path d="m21 21-4.3-4.3" />
     </svg>
   );
 };

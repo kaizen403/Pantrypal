@@ -43,6 +43,7 @@ model Item {
   quantity   Int
   price      Float
   sellstart  DateTime @default(now())
+  
 }
 
 

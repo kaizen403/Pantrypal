@@ -19,10 +19,10 @@ export default function Home() {
   return (
     <div
       className="w-full bg-black flex flex-col items-center bg-grid-blue-400/[0.15] justify-center overflow-hidden"
-      style={{ height: "100vh", overflowY: "auto" }} // Ensures this is the lowest layer by using a negative z-index
+      style={{ height: "100vh", overflowY: "auto" }}
     >
       <div className="flex flex-col z-50 -mt-72">
-        <h1 className="md:text-7xl pt-72 text-5xl tracking-normal lg:text-6xl font-bold text-center text-white relative z-10">
+        <h1 className="md:text-7xl pt-72 text-5xl tracking-normal lg:text-6xl font-bold text-center text-white relative ">
           PantryPal
         </h1>
 
