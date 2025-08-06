@@ -64,12 +64,7 @@ export default function Home() {
               </Button>
             </div>
           </Link>
-          <p className="my-3 text-white text-sm">
-            Already have an account?{" "}
-            <Link className="underline text-green-600" href={"/login"}>
-              login
-            </Link>
-          </p>
+          
         </div>
       </div>
     </div>
